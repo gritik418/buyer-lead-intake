@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar/Navbar";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import prisma from "@/lib/prismaClient";
@@ -62,143 +63,146 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="bg-gray-900 min-h-screen flex flex-col text-white h-full">
-      <div className="p-6 max-w-7xl mx-auto flex flex-col">
-        <div className="flex gap-8 justify my-8 items-center justify-between">
-          <h1 className="text-2xl font-bold">Buyers</h1>
+    <div>
+      <Navbar />
+      <div className="bg-gray-900 min-h-screen flex flex-col text-white h-full">
+        <div className="p-6 max-w-7xl mx-auto flex flex-col">
+          <div className="flex gap-8 justify my-8 items-center justify-between">
+            <h1 className="text-2xl font-bold">Buyers</h1>
 
-          <Link
-            href={"/buyers/new"}
-            className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
-          >
-            Add Buyer
-            <FaPlus />
-          </Link>
-        </div>
+            <Link
+              href={"/buyers/new"}
+              className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
+            >
+              Add Buyer
+              <FaPlus />
+            </Link>
+          </div>
 
-        <SearchBar />
+          <SearchBar />
 
-        <form className="flex flex-wrap gap-4 my-6" action={"/buyers"}>
-          <select
-            name="city"
-            defaultValue={searchParams.city || ""}
-            className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
-          >
-            <option value="">All Cities</option>
-            {Object.values(City).map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <form className="flex flex-wrap gap-4 my-6" action={"/buyers"}>
+            <select
+              name="city"
+              defaultValue={searchParams.city || ""}
+              className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
+            >
+              <option value="">All Cities</option>
+              {Object.values(City).map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
 
-          <select
-            name="propertyType"
-            defaultValue={searchParams.propertyType || ""}
-            className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
-          >
-            <option value="">All Property Types</option>
-            {Object.values(PropertyType).map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+            <select
+              name="propertyType"
+              defaultValue={searchParams.propertyType || ""}
+              className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
+            >
+              <option value="">All Property Types</option>
+              {Object.values(PropertyType).map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
 
-          <select
-            name="status"
-            defaultValue={searchParams.status || ""}
-            className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
-          >
-            <option value="">All Status</option>
-            {Object.values(Status).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+            <select
+              name="status"
+              defaultValue={searchParams.status || ""}
+              className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
+            >
+              <option value="">All Status</option>
+              {Object.values(Status).map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
 
-          <select
-            name="timeline"
-            defaultValue={searchParams.timeline || ""}
-            className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
-          >
-            <option value="">All Timelines</option>
-            {Object.values(Timeline).map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
+            <select
+              name="timeline"
+              defaultValue={searchParams.timeline || ""}
+              className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
+            >
+              <option value="">All Timelines</option>
+              {Object.values(Timeline).map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
 
-          <select
-            name="sort"
-            defaultValue={searchParams.sort || "updatedAt:desc"}
-            className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
-          >
-            <option value="updatedAt:desc">Updated (newest first)</option>
-            <option value="updatedAt:asc">Updated (oldest first)</option>
-            <option value="fullName:asc">{"Name (A - Z)"}</option>
-            <option value="fullName:desc">{"Name (Z - A)"}</option>
-          </select>
+            <select
+              name="sort"
+              defaultValue={searchParams.sort || "updatedAt:desc"}
+              className="bg-gray-800 border border-gray-600 rounded px-2 py-1"
+            >
+              <option value="updatedAt:desc">Updated (newest first)</option>
+              <option value="updatedAt:asc">Updated (oldest first)</option>
+              <option value="fullName:asc">{"Name (A - Z)"}</option>
+              <option value="fullName:desc">{"Name (Z - A)"}</option>
+            </select>
 
-          <button
-            type="submit"
-            className="bg-indigo-500 cursor-pointer px-4 py-1 rounded text-white"
-          >
-            Apply
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="bg-indigo-500 cursor-pointer px-4 py-1 rounded text-white"
+            >
+              Apply
+            </button>
+          </form>
 
-        <table className="w-full mt-2 border-collapse border">
-          <thead>
-            <tr className="bg-gray-500">
-              <th className="border px-2 py-1">Name</th>
-              <th className="border px-2 py-1">Phone</th>
-              <th className="border px-2 py-1">City</th>
-              <th className="border px-2 py-1">Property Type</th>
-              <th className="border px-2 py-1">BHK</th>
-              <th className="border px-2 py-1">Budget</th>
-              <th className="border px-2 py-1">Timeline</th>
-              <th className="border px-2 py-1">Status</th>
-              <th className="border px-2 py-1">Updated At</th>
-              <th className="border px-2 py-1">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {buyers.map((b: Buyer) => (
-              <tr key={b.id}>
-                <td className="border px-2 py-1">{b.fullName}</td>
-                <td className="border px-2 py-1">{b.phone}</td>
-                <td className="border px-2 py-1">{b.city}</td>
-                <td className="border px-2 py-1">{b.propertyType}</td>
-                <td className="border px-2 py-1 text-center ">
-                  {b.bhk || "-"}
-                </td>
-                <td className="border px-2 py-1">
-                  {b.budgetMin ? b.budgetMin : "-"} -{" "}
-                  {b.budgetMax ? b.budgetMax : "-"}
-                </td>
-                <td className="border px-2 py-1">{b.timeline}</td>
-                <td className="border px-2 py-1">{b.status}</td>
-                <td className="border px-2 py-1">
-                  {new Date(b.updatedAt).toLocaleString()}
-                </td>
-                <td className="border px-2 py-1">
-                  <a
-                    href={`/buyers/${b.id}`}
-                    className="text-indigo-400 font-semibold hover:underline"
-                  >
-                    View / Edit
-                  </a>
-                </td>
+          <table className="w-full mt-2 border-collapse border">
+            <thead>
+              <tr className="bg-gray-500">
+                <th className="border px-2 py-1">Name</th>
+                <th className="border px-2 py-1">Phone</th>
+                <th className="border px-2 py-1">City</th>
+                <th className="border px-2 py-1">Property Type</th>
+                <th className="border px-2 py-1">BHK</th>
+                <th className="border px-2 py-1">Budget</th>
+                <th className="border px-2 py-1">Timeline</th>
+                <th className="border px-2 py-1">Status</th>
+                <th className="border px-2 py-1">Updated At</th>
+                <th className="border px-2 py-1">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {buyers.map((b: Buyer) => (
+                <tr key={b.id}>
+                  <td className="border px-2 py-1">{b.fullName}</td>
+                  <td className="border px-2 py-1">{b.phone}</td>
+                  <td className="border px-2 py-1">{b.city}</td>
+                  <td className="border px-2 py-1">{b.propertyType}</td>
+                  <td className="border px-2 py-1 text-center ">
+                    {b.bhk || "-"}
+                  </td>
+                  <td className="border px-2 py-1">
+                    {b.budgetMin ? b.budgetMin : "-"} -{" "}
+                    {b.budgetMax ? b.budgetMax : "-"}
+                  </td>
+                  <td className="border px-2 py-1">{b.timeline}</td>
+                  <td className="border px-2 py-1">{b.status}</td>
+                  <td className="border px-2 py-1">
+                    {new Date(b.updatedAt).toLocaleString()}
+                  </td>
+                  <td className="border px-2 py-1">
+                    <a
+                      href={`/buyers/${b.id}`}
+                      className="text-indigo-400 font-semibold hover:underline"
+                    >
+                      View / Edit
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        <div className="mt-8 w-full flex flex-row items-center gap-2">
-          <Pagination currentPage={page} totalPages={totalPages} />
+          <div className="mt-8 w-full flex flex-row items-center gap-2">
+            <Pagination currentPage={page} totalPages={totalPages} />
+          </div>
         </div>
       </div>
     </div>

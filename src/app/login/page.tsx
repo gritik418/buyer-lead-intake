@@ -40,7 +40,7 @@ const LoginPage = () => {
 
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
           <h1 className="text-indigo-300 text-4xl font-extrabold tracking-tight">
-            BLT <span className="text-white">– Buyer Lead Intake</span>
+            BLI <span className="text-white">– Buyer Lead Intake</span>
           </h1>
           <p className="mt-3 text-base text-gray-400">
             Streamline and manage your leads efficiently
