@@ -1,24 +1,43 @@
 "use client";
 import supabase from "@/lib/supabaseClient";
-import Link from "next/link";
-import React, { useState } from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const handleLogin = async () => {
+    setLoading(true);
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
       options: {
         shouldCreateUser: true,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       },
     });
+    setLoading(false);
+    if (data) {
+      setMessage("Check your email for the magic link!");
+    }
+    if (error) {
+      setError(error.message);
+    }
   };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) redirect("/");
+    });
+  }, []);
 
   return (
     <main className="mx-auto h-screen bg-gray-900 p-6">
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         {/* Branding */}
+
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
           <h1 className="text-indigo-300 text-4xl font-extrabold tracking-tight">
             BLT <span className="text-white">– Buyer Lead Intake</span>
@@ -62,22 +81,46 @@ const LoginPage = () => {
           <div>
             <button
               onClick={handleLogin}
-              className="flex w-full cursor-pointer justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex w-full cursor-pointer rounded-md bg-indigo-500 px-3 h-10 items-center justify-center text-sm font-semibold text-white transition hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              Sign in
+              {loading ? (
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  />
+                </svg>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </div>
 
-          {/* Register link */}
-          <p className="mt-8 text-center text-sm text-gray-400">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/register"
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
-            >
-              Register now
-            </Link>
-          </p>
+          {!error && message ? (
+            <p className="text-green-800 font-semibold py-1 rounded my-3 bg-green-100 sm:mx-auto sm:w-full sm:max-w-sm text-center">
+              {message}
+            </p>
+          ) : null}
+
+          {error ? (
+            <p className="text-red-800 font-semibold py-1 rounded my-3 bg-red-100 sm:mx-auto sm:w-full sm:max-w-sm text-center">
+              {error}
+            </p>
+          ) : null}
         </div>
       </div>
     </main>
