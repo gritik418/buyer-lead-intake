@@ -1,6 +1,9 @@
+import Pagination from "@/components/Pagination/Pagination";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import prisma from "@/lib/prismaClient";
 import { Buyer, City, PropertyType, Status, Timeline } from "@prisma/client";
+import Link from "next/link";
+import { FaPlus } from "react-icons/fa";
 
 interface QueryParams {
   search?: string;
@@ -50,9 +53,19 @@ export default async function BuyersPage({
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="bg-gray-900 min-h-screen text-white h-full">
-      <div className="p-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Buyers</h1>
+    <div className="bg-gray-900 min-h-screen flex flex-col text-white h-full">
+      <div className="p-6 max-w-7xl mx-auto flex flex-col">
+        <div className="flex gap-8 justify my-8 items-center justify-between">
+          <h1 className="text-2xl font-bold">Buyers</h1>
+
+          <Link
+            href={"/buyers/new"}
+            className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
+          >
+            Add Buyer
+            <FaPlus />
+          </Link>
+        </div>
 
         <SearchBar />
 
@@ -102,22 +115,9 @@ export default async function BuyersPage({
             ))}
           </tbody>
         </table>
-        {/* Pagination */}
-        <div className="mt-4 flex justify-center gap-2">
-          {Array.from({ length: totalPages }).map((_, i) => {
-            const p = i + 1;
-            return (
-              <a
-                key={p}
-                href={`?page=${p}`}
-                className={`px-3 py-1 border rounded ${
-                  p === page ? "bg-blue-500 text-white" : ""
-                }`}
-              >
-                {p}
-              </a>
-            );
-          })}
+
+        <div className="mt-8 w-full flex flex-row items-center gap-2">
+          <Pagination currentPage={page} totalPages={totalPages} />
         </div>
       </div>
     </div>
