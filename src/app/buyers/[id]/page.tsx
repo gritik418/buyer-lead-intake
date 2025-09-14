@@ -18,7 +18,7 @@ export default async function BuyerDetailPage({
   const history = await prisma.buyerHistory.findMany({
     where: { buyerId: id },
     orderBy: { changedAt: "desc" },
-    take: 5,
+    take: 6,
     include: {
       buyer: true,
       user: true,

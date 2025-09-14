@@ -11,7 +11,6 @@ interface Props {
 }
 
 const UpdateBuyerForm = ({ buyer }: Props) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
@@ -48,7 +47,6 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
   }, [propertyType, setValue]);
 
   const submitHandler = async (data: Buyer) => {
-    setLoading(true);
     setErrorMessage("");
     try {
       const res = await fetch(`/api/buyers/${buyer.id}`, {
@@ -75,12 +73,10 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
           setErrorMessage(json?.error || "Something went wrong.");
         }
       } else {
-        router.push("/buyers");
+        router.refresh();
       }
     } catch (err: any) {
       setErrorMessage(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -316,6 +312,8 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
         value={buyer.updatedAt.toISOString()}
         name="updatedAt"
       />
+
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
       <button
         type="submit"
