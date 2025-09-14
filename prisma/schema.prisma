@@ -51,9 +51,9 @@ model Buyer {
 model BuyerHistory {
   id        String   @id @default(uuid())
   buyerId   String
-  changedBy String
+  changedBy String?
   buyer     Buyer    @relation(fields: [buyerId], references: [id])
-  user      User     @relation(fields: [changedBy], references: [id])
+  user      User?    @relation(fields: [changedBy], references: [id])
   changedAt DateTime @default(now())
   diff      Json
 }

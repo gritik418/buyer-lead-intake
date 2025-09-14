@@ -1,3 +1,4 @@
+import ImportCSV from "@/components/ImportCSV/ImportCSV";
 import Navbar from "@/components/Navbar/Navbar";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBar from "@/components/SearchBar/SearchBar";
@@ -70,13 +71,17 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
           <div className="flex gap-8 justify my-8 items-center justify-between">
             <h1 className="text-2xl font-bold">Buyers</h1>
 
-            <Link
-              href={"/buyers/new"}
-              className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
-            >
-              Add Buyer
-              <FaPlus />
-            </Link>
+            <div className="flex gap-3">
+              <ImportCSV />
+
+              <Link
+                href={"/buyers/new"}
+                className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
+              >
+                Add Buyer
+                <FaPlus />
+              </Link>
+            </div>
           </div>
 
           <SearchBar />
@@ -153,53 +158,54 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
             </button>
           </form>
 
-          <table className="w-full mt-2 border-collapse border">
-            <thead>
-              <tr className="bg-gray-500">
-                <th className="border px-2 py-1">Name</th>
-                <th className="border px-2 py-1">Phone</th>
-                <th className="border px-2 py-1">City</th>
-                <th className="border px-2 py-1">Property Type</th>
-                <th className="border px-2 py-1">BHK</th>
-                <th className="border px-2 py-1">Budget</th>
-                <th className="border px-2 py-1">Timeline</th>
-                <th className="border px-2 py-1">Status</th>
-                <th className="border px-2 py-1">Updated At</th>
-                <th className="border px-2 py-1">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {buyers.map((b: Buyer) => (
-                <tr key={b.id}>
-                  <td className="border px-2 py-1">{b.fullName}</td>
-                  <td className="border px-2 py-1">{b.phone}</td>
-                  <td className="border px-2 py-1">{b.city}</td>
-                  <td className="border px-2 py-1">{b.propertyType}</td>
-                  <td className="border px-2 py-1 text-center ">
-                    {b.bhk || "-"}
-                  </td>
-                  <td className="border px-2 py-1">
-                    {b.budgetMin ? b.budgetMin : "-"} -{" "}
-                    {b.budgetMax ? b.budgetMax : "-"}
-                  </td>
-                  <td className="border px-2 py-1">{b.timeline}</td>
-                  <td className="border px-2 py-1">{b.status}</td>
-                  <td className="border px-2 py-1">
-                    {new Date(b.updatedAt).toLocaleString()}
-                  </td>
-                  <td className="border px-2 py-1">
-                    <a
-                      href={`/buyers/${b.id}`}
-                      className="text-indigo-400 font-semibold hover:underline"
-                    >
-                      View / Edit
-                    </a>
-                  </td>
+          <div className="overflow-x-auto w-full border border-gray-700 rounded">
+            <table className="min-w-[1000px] border-collapse border border-gray-600">
+              <thead>
+                <tr className="bg-gray-500">
+                  <th className="border px-2 py-1 whitespace-nowrap">Name</th>
+                  <th className="border px-2 py-1">Phone</th>
+                  <th className="border px-2 py-1">City</th>
+                  <th className="border px-2 py-1">Property Type</th>
+                  <th className="border px-2 py-1">BHK</th>
+                  <th className="border px-2 py-1">Budget</th>
+                  <th className="border px-2 py-1">Timeline</th>
+                  <th className="border px-2 py-1">Status</th>
+                  <th className="border px-2 py-1">Updated At</th>
+                  <th className="border px-2 py-1">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
+              </thead>
+              <tbody>
+                {buyers.map((b: Buyer) => (
+                  <tr key={b.id}>
+                    <td className="border px-2 py-1">{b.fullName}</td>
+                    <td className="border px-2 py-1">{b.phone}</td>
+                    <td className="border px-2 py-1">{b.city}</td>
+                    <td className="border px-2 py-1">{b.propertyType}</td>
+                    <td className="border px-2 py-1 text-center ">
+                      {b.bhk || "-"}
+                    </td>
+                    <td className="border px-2 py-1">
+                      {b.budgetMin ? b.budgetMin : "-"} -{" "}
+                      {b.budgetMax ? b.budgetMax : "-"}
+                    </td>
+                    <td className="border px-2 py-1">{b.timeline}</td>
+                    <td className="border px-2 py-1">{b.status}</td>
+                    <td className="border px-2 py-1">
+                      {new Date(b.updatedAt).toLocaleString()}
+                    </td>
+                    <td className="border px-2 py-1">
+                      <a
+                        href={`/buyers/${b.id}`}
+                        className="text-indigo-400 font-semibold hover:underline"
+                      >
+                        View / Edit
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className="mt-8 w-full flex flex-row items-center gap-2">
             <Pagination currentPage={page} totalPages={totalPages} />
           </div>
