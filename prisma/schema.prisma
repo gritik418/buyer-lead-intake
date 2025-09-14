@@ -15,13 +15,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String         @id @default(uuid())
   name      String?
-  email     String?  @unique
-  role      Role     @default(USER)
+  email     String?        @unique
+  role      Role           @default(USER)
   buyers    Buyer[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  histories BuyerHistory[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 }
 
 model Buyer {
@@ -52,6 +53,7 @@ model BuyerHistory {
   buyerId   String
   changedBy String
   buyer     Buyer    @relation(fields: [buyerId], references: [id])
+  user      User     @relation(fields: [changedBy], references: [id])
   changedAt DateTime @default(now())
   diff      Json
 }

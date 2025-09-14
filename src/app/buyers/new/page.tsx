@@ -65,6 +65,8 @@ export default function CreateBuyerPage() {
               });
             }
           });
+        } else {
+          setErrorMessage(json?.error || "Something went wrong.");
         }
       } else {
         router.push("/buyers");

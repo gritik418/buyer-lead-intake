@@ -5,7 +5,7 @@ import { Buyer, City, PropertyType, Status, Timeline } from "@prisma/client";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 
-interface QueryParams {
+type QueryParams = Promise<{
   search?: string;
   city?: City;
   propertyType?: PropertyType;
@@ -13,15 +13,12 @@ interface QueryParams {
   timeline?: Timeline;
   page?: string;
   sort?: string;
-}
+}>;
 
 export const revalidate = 0;
 
-export default async function BuyersPage({
-  searchParams,
-}: {
-  searchParams: QueryParams;
-}) {
+export default async function BuyersPage(props: { searchParams: QueryParams }) {
+  const searchParams = await props.searchParams;
   const page = parseInt(searchParams.page || "1");
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
