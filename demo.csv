@@ -1,6 +1,6 @@
 fullName,email,phone,city,propertyType,bhk,purpose,budgetMin,budgetMax,timeline,source,notes,tags,status
-Rohit Sharma,rohit@example.com,9876543210,Chandigarh,Apartment,Two,Buy,4000000,6000000,ZeroTo3m,Website,Interested in 2BHK near IT park,hot,Active
-Anita Gupta,anita@example.com,9811122233,Mohali,Villa,Three,Buy,8000000,12000000,ThreeTo6m,Referral,Looking for gated villa with garden,luxury,Active
-Sunil Mehta,sunil@example.com,9898989898,Zirakpur,Plot,,Buy,2000000,3000000,Over6m,Walk_in,Wants a residential plot near airport,investment,Active
-Priya Verma,priya@example.com,9123456789,Panchkula,Apartment,One,Rent,15000,25000,Exploring,Call,Looking for affordable rental,urgent,Active
-Amit Khanna,amit@example.com,9011223344,Other,Retail,,Buy,5000000,7000000,ZeroTo3m,Other,Commercial shop for startup,business,Active
+Neha Singh,neha@example.com,9988776655,Vanarasi,Apartment,Three,Rent,20000,30000,ZeroTo3m,Website,Looking near city center,high-priority,Active
+Vikram Joshi,vikram@example.com,9870012345,Mohali,Plot,Four,Buy,15000000,20000000,ThreeTo6m,Referral,Premium villa with pool,luxury,Active
+Sanya Kapoor,sanya@example.com,9123456780,Panchkula,Pldot,,Buy,3500000,5000000,Over6m,Walk_in,Looking for plot near school,investment,Active
+Aditya Rao,aditya@example.com,9898765432,Zirakpur,Apartsment,Two,Rent,18000,25000,Exploring,Call,Close to IT hub,urgent,Active
+Ritu Malhotra,ritu@example.com,9812345670,Mohali,Retail,,Buy,7000000,9000000,ZeroTo3m,Website,Shop for boutique,business,Active

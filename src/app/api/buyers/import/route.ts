@@ -4,23 +4,6 @@ import { buyerSchema, BuyerType } from "@/validators/buyer";
 import prisma from "@/lib/prismaClient";
 import supabase from "@/lib/supabaseClient";
 
-const headers = [
-  "fullName",
-  "email",
-  "phone",
-  "city",
-  "propertyType",
-  "bhk",
-  "purpose",
-  "budgetMin",
-  "budgetMax",
-  "timeline",
-  "source",
-  "notes",
-  "tags",
-  "status",
-];
-
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -28,27 +11,49 @@ export async function POST(req: NextRequest) {
 
     if (!file) {
       return NextResponse.json(
-        { error: "CSV file is required" },
+        {
+          success: false,
+          message: "CSV file is required",
+          error: "CSV file is required",
+        },
         { status: 400 }
       );
     }
 
     if (file.type !== "text/csv") {
       return NextResponse.json(
-        { error: "File type must be csv" },
+        {
+          success: false,
+          message: "File type must be csv",
+          error: "File type must be csv",
+        },
         { status: 400 }
       );
     }
 
     const bearerToken = req.headers.get("Authorization");
     if (!bearerToken) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authenticated",
+          error: "Not authenticated",
+        },
+        { status: 401 }
+      );
     }
 
     const authToken = bearerToken.split(" ")[1];
 
     if (!authToken) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authenticated",
+          error: "Not authenticated",
+        },
+        { status: 401 }
+      );
     }
 
     const { data: sessionData } = await supabase.auth.getUser(authToken);
@@ -56,7 +61,14 @@ export async function POST(req: NextRequest) {
     const user = sessionData.user;
 
     if (!user || !user.id) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authenticated",
+          error: "Not authenticated",
+        },
+        { status: 401 }
+      );
     }
 
     const text = await file.text();
@@ -67,7 +79,11 @@ export async function POST(req: NextRequest) {
 
     if (records.length > 200) {
       return NextResponse.json(
-        { error: "Maximum 200 rows allowed" },
+        {
+          success: false,
+          message: "Maximum 200 rows allowed",
+          error: "Maximum 200 rows allowed",
+        },
         { status: 400 }
       );
     }
@@ -79,7 +95,6 @@ export async function POST(req: NextRequest) {
 
     for (const row of records) {
       i++;
-      console.log(row.bhk);
       const parsed = buyerSchema.safeParse({
         ...row,
         budgetMin: row.budgetMin ? Number(row.budgetMin) : undefined,
@@ -99,12 +114,6 @@ export async function POST(req: NextRequest) {
         });
       }
     }
-    if (invalidRows.length > 0) {
-      return NextResponse.json({ invalidRows }, { status: 400 });
-    }
-
-    if (!user || !user.id)
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
     await prisma.$transaction(
       validRows.map((data) =>
@@ -112,7 +121,32 @@ export async function POST(req: NextRequest) {
       )
     );
 
-    return NextResponse.json({ success: true });
+    let message = `Successfully imported ${validRows.length} ${
+      validRows.length > 1 ? "buyers" : "buyer"
+    }.`;
+    if (invalidRows.length > 0) {
+      message += ` Skipped ${invalidRows.length} invalid rows.`;
+    }
+
+    if (invalidRows.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: message,
+          invalidRows,
+          importedCount: validRows.length,
+          skippedCount: invalidRows.length,
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      message: `Successfully imported ${validRows.length} ${
+        validRows.length > 1 ? "buyers" : "buyer"
+      }.`,
+      success: true,
+    });
   } catch (error: any) {
     return NextResponse.json(
       { message: "Import failed", error: error },
