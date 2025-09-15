@@ -115,11 +115,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    await prisma.$transaction(
-      validRows.map((data) =>
-        prisma.buyer.create({ data: { ...data, ownerId: user.id } })
-      )
-    );
+    await prisma.$transaction(async (tx) => {
+      for (const row of validRows) {
+        const buyer = await tx.buyer.create({
+          data: { ...row, ownerId: user.id },
+        });
+
+        await tx.buyerHistory.create({
+          data: {
+            buyerId: buyer.id,
+            changedBy: user.id,
+            diff: {
+              action: "Created",
+              data: buyer,
+            },
+          },
+        });
+      }
+    });
 
     let message = `Successfully imported ${validRows.length} ${
       validRows.length > 1 ? "buyers" : "buyer"

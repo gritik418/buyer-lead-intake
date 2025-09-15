@@ -1,4 +1,5 @@
 import BuyerHistoryComponent from "@/components/BuyerHistory/BuyerHistory";
+import DeleteBuyerButton from "@/components/DeleteBuyerButton/DeleteBuyerButton";
 import Navbar from "@/components/Navbar/Navbar";
 import UpdateBuyerForm from "@/components/UpdateBuyerLead/UpdateBuyerLead";
 import prisma from "@/lib/prismaClient";
@@ -31,11 +32,19 @@ export default async function BuyerDetailPage({
       <Navbar />
       <div className="bg-gray-900 py-12">
         <div className="p-6 max-w-4xl mx-auto text-white">
-          <h1 className="text-2xl font-bold mb-6">View & Edit Buyer</h1>
+          <div className="flex items-center mb-10 justify-between">
+            <h1 className="text-2xl sm:text-4xl font-bold">
+              View & Edit Buyer
+            </h1>
+
+            <DeleteBuyerButton id={id} />
+          </div>
 
           <UpdateBuyerForm buyer={buyer} />
 
-          <BuyerHistoryComponent history={history} />
+          {history.length > 0 ? (
+            <BuyerHistoryComponent history={history} />
+          ) : null}
         </div>
       </div>
     </div>

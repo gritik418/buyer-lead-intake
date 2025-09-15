@@ -5,6 +5,7 @@ import { Buyer } from "@prisma/client";
 import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 interface Props {
   buyer: Buyer;
@@ -57,11 +58,13 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
         },
         body: JSON.stringify({ ...data, bhk: data.bhk || undefined }),
       });
-      const json = await res.json();
+      const result = await res.json();
 
-      if (!res.ok) {
-        if (json?.errors) {
-          Object.entries(json.errors).forEach(([field, errorObj]: any) => {
+      if (result?.success) {
+        toast.success(result?.message);
+      } else {
+        if (result?.errors) {
+          Object.entries(result.errors).forEach(([field, errorObj]: any) => {
             if (errorObj?._errors?.length) {
               setError(field as keyof BuyerType, {
                 type: "manual",
@@ -69,11 +72,10 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
               });
             }
           });
+          toast.error(result?.message || "Something went wrong.");
         } else {
-          setErrorMessage(json?.error || "Something went wrong.");
+          toast.error(result?.message || "Something went wrong.");
         }
-      } else {
-        router.refresh();
       }
     } catch (err: any) {
       setErrorMessage(err.message);
