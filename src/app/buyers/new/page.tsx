@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/Navbar/Navbar";
+import TagChipsInput from "@/components/TagChips/TagChips";
 import supabase from "@/lib/supabaseClient";
 import { buyerSchema, BuyerType } from "@/validators/buyer";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function CreateBuyerPage() {
+  const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,6 @@ export default function CreateBuyerPage() {
   } = useForm<BuyerType>({
     resolver: zodResolver(buyerSchema) as any,
     defaultValues: {
-      tags: [],
       budgetMin: 5000,
       budgetMax: 10000,
     },
@@ -52,7 +53,7 @@ export default function CreateBuyerPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...data, bhk: data.bhk || undefined }),
+        body: JSON.stringify({ ...data, bhk: data.bhk || undefined, tags }),
       });
       const json = await res.json();
 
@@ -300,16 +301,9 @@ export default function CreateBuyerPage() {
               )}
             </div>
 
-            <div>
-              <label htmlFor="tags" className="block font-medium">
-                Tags
-              </label>
-              <input
-                {...register("tags")}
-                id="tags"
-                placeholder="Tags (, separated)"
-                className="w-full border p-2 rounded"
-              />
+            <div className="my-4">
+              <label className="font-semibold">Tags</label>
+              <TagChipsInput tags={tags} onChange={setTags} />
             </div>
 
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}

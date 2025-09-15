@@ -6,6 +6,7 @@ import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import TagChipsInput from "../TagChips/TagChips";
 
 interface Props {
   buyer: Buyer;
@@ -14,7 +15,7 @@ interface Props {
 const UpdateBuyerForm = ({ buyer }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [token, setToken] = useState<string | null>(null);
-  const router = useRouter();
+  const [tags, setTags] = useState<string[]>(buyer.tags || []);
 
   const {
     register,
@@ -48,6 +49,7 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
   }, [propertyType, setValue]);
 
   const submitHandler = async (data: Buyer) => {
+    console.log(tags);
     setErrorMessage("");
     try {
       const res = await fetch(`/api/buyers/${buyer.id}`, {
@@ -56,7 +58,7 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...data, bhk: data.bhk || undefined }),
+        body: JSON.stringify({ ...data, bhk: data.bhk || undefined, tags }),
       });
       const result = await res.json();
 
@@ -296,16 +298,9 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
         {errors.notes && <p className="text-red-500">{errors.notes.message}</p>}
       </div>
 
-      <div>
-        <label htmlFor="tags" className="block font-medium">
-          Tags
-        </label>
-        <input
-          {...register("tags")}
-          id="tags"
-          placeholder="Tags (, separated)"
-          className="w-full border p-2 rounded"
-        />
+      <div className="my-4">
+        <label className="font-semibold">Tags</label>
+        <TagChipsInput tags={tags} onChange={setTags} />
       </div>
 
       <input

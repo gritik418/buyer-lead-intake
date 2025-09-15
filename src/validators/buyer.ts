@@ -20,6 +20,8 @@ export const buyerSchema = z
           .split(",")
           .map((t) => t.trim())
           .filter((t) => t);
+      } else if (typeof val === "object") {
+        return val;
       }
       return [];
     }, z.array(z.string())),
