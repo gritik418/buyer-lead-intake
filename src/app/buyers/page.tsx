@@ -75,6 +75,15 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
               <ImportCSV />
 
               <Link
+                href={`/api/buyers/export?${new URLSearchParams(
+                  searchParams as any
+                ).toString()}`}
+                className="flex gap-2 bg-green-500 py-1 px-2 rounded-md items-center text-white"
+              >
+                Export CSV
+              </Link>
+
+              <Link
                 href={"/buyers/new"}
                 className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
               >
