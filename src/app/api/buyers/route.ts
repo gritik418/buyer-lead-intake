@@ -2,9 +2,24 @@ import prisma from "@/lib/prismaClient";
 import { NextRequest, NextResponse } from "next/server";
 import { buyerSchema } from "@/validators/buyer";
 import supabase from "@/lib/supabaseClient";
+import { checkRateLimit } from "@/lib/rateLimiter";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const { allowed } = checkRateLimit(`create:${ip}`);
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Rate limit exceeded. Try again later.",
+          error: "Rate limit exceeded. Try again later.",
+        },
+        { status: 429 }
+      );
+    }
+
     const json = await req.json();
     const { success, data: parsedData, error } = buyerSchema.safeParse(json);
 
