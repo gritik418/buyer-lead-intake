@@ -165,28 +165,28 @@ Ownership Enforcement: Users can only edit/delete leads they own
 
 ### Home Screen
 
-![Home Screen](/screenshots/home_screen.png)
+![Home Screen](/public/screenshots/home_screen.png)
 
 ### Login Screen
 
-![Login Screen](/screenshots/login_screen.png)
+![Login Screen](/public/screenshots/login_screen.png)
 
 ### Buyers List Screen
 
-![Buyers List Screen](/screenshots/buyers_list_screen.png)
+![Buyers List Screen](/public/screenshots/buyers_list_screen.png)
 
 ### Create New Lead Screen
 
-![Create New Lead](/screenshots/create_new_lead_screen.png)
+![Create New Lead](/public/screenshots/create_new_lead_screen.png)
 
 ### CSV Import Modal
 
-![CSV Import Modal](/screenshots/import_csv_modal.png)
+![CSV Import Modal](/public/screenshots/import_csv_modal.png)
 
 ### CSV Error Info
 
-![CSV Error Info](/screenshots/csv_error_info_with_row_info.png)
+![CSV Error Info](/public/screenshots/csv_error_info_with_row_info.png)
 
 ### Change History Record (Old vs New)
 
-![Change History Comparison](/screenshots/change_history_record_with_old_new_comparison.png)
+![Change History Comparison](/public/screenshots/change_history_record_with_old_new_comparison.png)
