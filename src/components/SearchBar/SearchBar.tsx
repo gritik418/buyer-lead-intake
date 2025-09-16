@@ -20,13 +20,16 @@ const SearchBar = () => {
 
   return (
     <div className="flex">
-      {" "}
+      <label htmlFor="buyer-search" className="sr-only">
+        Search Buyers
+      </label>
       <input
         type="text"
+        id="buyer-search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search by name, phone, or email..."
-        className="border p-2 rounded flex-1"
+        className="border p-2 rounded flex-1 focus:outline-none focus:ring-2 focus:ring-primary"
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import ReduxProvider from "./providers/ReduxProvider/ReduxProvider";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-          <Wrapper>{children}</Wrapper>
+          <Wrapper>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </Wrapper>
         </ReduxProvider>
         <Toaster />
       </body>

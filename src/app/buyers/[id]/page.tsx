@@ -3,7 +3,7 @@ import DeleteBuyerButton from "@/components/DeleteBuyerButton/DeleteBuyerButton"
 import Navbar from "@/components/Navbar/Navbar";
 import UpdateBuyerForm from "@/components/UpdateBuyerLead/UpdateBuyerLead";
 import prisma from "@/lib/prismaClient";
-import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function BuyerDetailPage({
   params,
@@ -15,7 +15,25 @@ export default async function BuyerDetailPage({
     where: { id: id },
   });
 
-  if (!buyer) return notFound();
+  if (!buyer)
+    return (
+      <div className="p-4 py-8 flex flex-col justify-center gap-6 items-center bg-gray-900 h-screen w-screen text-center">
+        <div className="flex flex-col gap-2">
+          <p className="text-gray-200 text-lg">
+            Oops! The buyer you&apos;re looking for does not exist.
+          </p>
+          <p className="text-gray-400">
+            They might have been removed or the ID is incorrect.
+          </p>
+        </div>
+        <Link
+          href="/buyers"
+          className="bg-indigo-600 w-max text-white p-3 font-semibold rounded-lg"
+        >
+          Back to buyers
+        </Link>
+      </div>
+    );
 
   const history = await prisma.buyerHistory.findMany({
     where: { buyerId: id },
