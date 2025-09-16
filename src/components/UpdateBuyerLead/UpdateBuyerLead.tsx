@@ -1,11 +1,11 @@
 "use client";
-import supabase from "@/lib/supabaseClient";
+import { selectUserToken } from "@/store/slices/userSlice";
 import { BuyerType } from "@/validators/buyer";
 import { Buyer } from "@prisma/client";
-import { redirect, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import TagChipsInput from "../TagChips/TagChips";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 const UpdateBuyerForm = ({ buyer }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [token, setToken] = useState<string | null>(null);
+  const token = useSelector(selectUserToken);
   const [tags, setTags] = useState<string[]>(buyer.tags || []);
 
   const {
@@ -31,25 +31,12 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
   const propertyType = watch("propertyType");
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setToken(data.session.access_token);
-      } else {
-        redirect("/login");
-      }
-    };
-    getUser();
-  }, []);
-
-  useEffect(() => {
     if (propertyType !== "Apartment" && propertyType !== "Villa") {
       setValue("bhk", null);
     }
   }, [propertyType, setValue]);
 
   const submitHandler = async (data: Buyer) => {
-    console.log(tags);
     setErrorMessage("");
     try {
       const res = await fetch(`/api/buyers/${buyer.id}`, {

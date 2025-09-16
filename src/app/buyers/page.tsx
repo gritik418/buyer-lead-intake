@@ -2,6 +2,7 @@ import ImportCSV from "@/components/ImportCSV/ImportCSV";
 import Navbar from "@/components/Navbar/Navbar";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBar from "@/components/SearchBar/SearchBar";
+import StatusDropdown from "@/components/StatusDropdown/StatusDropdown";
 import prisma from "@/lib/prismaClient";
 import { Buyer, City, PropertyType, Status, Timeline } from "@prisma/client";
 import Link from "next/link";
@@ -198,7 +199,15 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
                       {b.budgetMax ? b.budgetMax : "-"}
                     </td>
                     <td className="border px-2 py-1">{b.timeline}</td>
-                    <td className="border px-2 py-1">{b.status}</td>
+                    {/* <td className="border px-2 py-1">{b.status}</td>
+                     */}
+                    <td className="border px-2 py-1">
+                      <StatusDropdown
+                        defaultSelected={b.status}
+                        ownerId={b.ownerId}
+                        buyerId={b.id}
+                      />
+                    </td>
                     <td className="border px-2 py-1">
                       {new Date(b.updatedAt).toLocaleString()}
                     </td>

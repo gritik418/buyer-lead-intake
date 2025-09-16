@@ -1,11 +1,11 @@
 "use client";
 
-import supabase from "@/lib/supabaseClient";
+import { selectUserToken } from "@/store/slices/userSlice";
 import * as Dialog from "@radix-ui/react-dialog";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaFile, FaFileCsv, FaUpload } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 type ErrorsType = {
   row: number;
@@ -16,22 +16,10 @@ const ImportCSV = () => {
   const [fileName, setFileName] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [token, setToken] = useState<string | null>(null);
+  const token = useSelector(selectUserToken);
   const [errors, setErrors] = useState<ErrorsType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setToken(data.session.access_token);
-      } else {
-        redirect("/login");
-      }
-    };
-    getUser();
-  }, []);
 
   const handleUpload = async () => {
     setErrorMessage("");

@@ -69,6 +69,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, buyer, message: "Buyer added." });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+    return NextResponse.json(
+      { success: false, messgae: "Server Error.", error: err.message },
+      { status: 400 }
+    );
   }
 }

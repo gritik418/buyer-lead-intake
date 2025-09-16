@@ -18,6 +18,7 @@ const LoginPage = () => {
         emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       },
     });
+
     setLoading(false);
     if (data) {
       setMessage("Check your email for the magic link!");

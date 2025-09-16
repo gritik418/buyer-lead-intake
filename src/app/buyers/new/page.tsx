@@ -1,31 +1,22 @@
 "use client";
 import Navbar from "@/components/Navbar/Navbar";
 import TagChipsInput from "@/components/TagChips/TagChips";
-import supabase from "@/lib/supabaseClient";
+import { selectUser, selectUserToken } from "@/store/slices/userSlice";
 import { buyerSchema, BuyerType } from "@/validators/buyer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function CreateBuyerPage() {
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setToken(data.session.access_token);
-      } else {
-        redirect("/login");
-      }
-    };
-    getUser();
-  }, []);
+  const token = useSelector(selectUserToken);
+  const user = useSelector(selectUser);
 
   const {
     register,
@@ -44,6 +35,10 @@ export default function CreateBuyerPage() {
   const propertyType = watch("propertyType");
 
   const onSubmit = async (data: BuyerType) => {
+    if (!user || !user.id) {
+      toast.error("Login to create a lead.");
+      return;
+    }
     setLoading(true);
     setErrorMessage("");
     try {
