@@ -1,19 +1,24 @@
 "use client";
 import supabase from "@/lib/supabaseClient";
-import { selectUser } from "@/store/slices/userSlice";
-import { LogOut } from "lucide-react";
+import { AppDispatch } from "@/store";
+import { selectUser, setToken, setUser } from "@/store/slices/userSlice";
+import { LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const user = useSelector(selectUser);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
+    dispatch(setUser({ user: null }));
+    dispatch(setToken({ token: null }));
+
     if (error) {
       toast.error(error.message);
     } else {
@@ -30,9 +35,18 @@ const Navbar = () => {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-4">
-          <Link href={"/buyers"} className="hover:text-gray-300">
-            Buyers
-          </Link>
+          {user?.id ? (
+            <Link href={"/buyers"} className="hover:text-gray-300">
+              Buyers
+            </Link>
+          ) : (
+            <Link
+              href={"/login"}
+              className="flex items-center justify-center gap-1 bg-gray-600 py-1 px-3 rounded-sm font-semibold"
+            >
+              Login <LogIn size={18} />
+            </Link>
+          )}
 
           {user && user.id ? (
             <button

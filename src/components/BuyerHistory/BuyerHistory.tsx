@@ -58,7 +58,7 @@ const BuyerHistoryComponent = ({ history }: { history: BuyerHistory[] }) => {
                     <div>
                       {h.diff.action} by:{" "}
                       <span className="font-semibold">
-                        {h?.user?.name}
+                        {h?.user?.name} {h?.user?.name && h.user?.email && " "}{" "}
                         {h?.user?.email}
                       </span>{" "}
                     </div>

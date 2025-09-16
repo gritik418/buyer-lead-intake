@@ -30,7 +30,9 @@ const LoginPage = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) redirect("/");
+      if (data.session) {
+        redirect("/");
+      }
     });
   }, []);
 

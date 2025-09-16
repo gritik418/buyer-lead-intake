@@ -72,10 +72,10 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
           <div className="flex gap-8 justify my-8 items-center justify-between">
             <h1 className="text-2xl font-bold">Buyers</h1>
 
-            {buyers.length > 0 ? (
-              <div className="flex gap-3">
-                <ImportCSV />
+            <div className="flex gap-3">
+              <ImportCSV />
 
+              {buyers.length > 0 ? (
                 <Link
                   href={`/api/buyers/export?${new URLSearchParams(
                     searchParams as any
@@ -84,16 +84,16 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
                 >
                   Export CSV
                 </Link>
+              ) : null}
 
-                <Link
-                  href={"/buyers/new"}
-                  className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
-                >
-                  Add Buyer
-                  <FaPlus />
-                </Link>
-              </div>
-            ) : null}
+              <Link
+                href={"/buyers/new"}
+                className="flex gap-2 bg-indigo-500 py-1 px-2 rounded-md items-center"
+              >
+                Add Buyer
+                <FaPlus />
+              </Link>
+            </div>
           </div>
           {buyers.length > 0 ? (
             <>

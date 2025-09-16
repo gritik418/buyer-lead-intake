@@ -7,7 +7,7 @@ import {
   setToken,
   setUser,
 } from "@/store/slices/userSlice";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -56,28 +56,25 @@ const Wrapper = ({
   };
 
   useEffect(() => {
-    if (token) return;
-    getUserToken();
-  }, []);
+    if (!token) getUserToken();
+  }, [pathname]);
 
   useEffect(() => {
-    if ((user && user.id) || !token) return;
-    getUserData();
-  }, [token]);
+    if (token && !user?.id) getUserData();
+    if (user?.id) setCheckedUser(true);
+  }, [token, user]);
 
   useEffect(() => {
-    if (user && user.id) {
-      setCheckedUser(true);
+    if (checkedUser && (!user || !user.id)) {
+      const isProtected = pathname.includes("/buyers");
+
+      if (isProtected) {
+        redirect("/login");
+      }
     }
-  }, [user]);
+  }, [checkedUser, user, router]);
 
-  useEffect(() => {
-    if (checkedUser && (!user || !user.id) && pathname !== "/login") {
-      router.replace("/login");
-    }
-  }, [checkedUser, user, pathname, router]);
-
-  if (!checkedUser || (!user && pathname !== "/login")) {
+  if (!checkedUser) {
     return (
       <div className="bg-gray-900 h-screen w-screen flex items-center justify-center">
         <svg

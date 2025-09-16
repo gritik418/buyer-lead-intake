@@ -32,6 +32,8 @@ export default function CallbackPage() {
       } catch (err: any) {
         setError(err.message);
         setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
