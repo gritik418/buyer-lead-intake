@@ -21,7 +21,10 @@ const BuyerHistoryComponent = ({ history }: { history: BuyerHistory[] }) => {
 
       <ul className="space-y-6">
         {recentHistory.slice(0, 5).map((h: History, index: number) => {
-          if (h.diff.action === "Created" || recentHistory[index] == undefined)
+          if (
+            h.diff.action === "Created" ||
+            recentHistory[index + 1] == undefined
+          )
             return (
               <li key={h.id} className="bg-gray-700 p-3 rounded-md">
                 <div className="text-sm text-gray-300">

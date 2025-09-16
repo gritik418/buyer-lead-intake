@@ -7,7 +7,8 @@ import {
   setToken,
   setUser,
 } from "@/store/slices/userSlice";
-import React, { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Wrapper = ({
@@ -18,6 +19,9 @@ const Wrapper = ({
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector(selectUserToken);
   const user = useSelector(selectUser);
+  const [checkedUser, setCheckedUser] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const getUserData = async () => {
     try {
@@ -37,6 +41,8 @@ const Wrapper = ({
       }
     } catch (error) {
       dispatch(setUser({ user: null }));
+    } finally {
+      setCheckedUser(true);
     }
   };
 
@@ -44,6 +50,8 @@ const Wrapper = ({
     const { data } = await supabase.auth.getSession();
     if (data.session) {
       dispatch(setToken({ token: data.session.access_token }));
+    } else {
+      setCheckedUser(true);
     }
   };
 
@@ -56,6 +64,45 @@ const Wrapper = ({
     if ((user && user.id) || !token) return;
     getUserData();
   }, [token]);
+
+  useEffect(() => {
+    if (user && user.id) {
+      setCheckedUser(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (checkedUser && (!user || !user.id) && pathname !== "/login") {
+      router.replace("/login");
+    }
+  }, [checkedUser, user, pathname, router]);
+
+  if (!checkedUser || (!user && pathname !== "/login")) {
+    return (
+      <div className="bg-gray-900 h-screen w-screen flex items-center justify-center">
+        <svg
+          className="animate-spin h-10 w-10 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          />
+        </svg>
+      </div>
+    );
+  }
 
   return <div>{children}</div>;
 };

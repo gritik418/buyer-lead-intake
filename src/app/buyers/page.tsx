@@ -172,7 +172,7 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
               </form>
 
               <div className="overflow-x-auto w-full border border-gray-700 rounded">
-                <table className="min-w-[1000px] border-collapse border border-gray-600">
+                <table className="min-w-[1000px] w-full border-collapse border border-gray-600">
                   <thead>
                     <tr className="bg-gray-500">
                       <th className="border px-2 py-1 whitespace-nowrap">

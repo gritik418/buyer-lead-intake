@@ -14,7 +14,6 @@ A lightweight platform to **capture, manage, and track buyer leads**. Key featur
 - [Design Notes](#design-notes)
 - [What's Done vs Skipped](#whats-done-vs-skipped)
 - [Screenshots](#screenshots)
-- [License](#license)
 
 ---
 
@@ -49,7 +48,7 @@ A lightweight platform to **capture, manage, and track buyer leads**. Key featur
 1. Clone the repository:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/gritik418/buyer-lead-intake.git
 cd buyer-lead-intake
 ```
 
@@ -64,11 +63,20 @@ yarn
 3. Set environment variables in .env:
 
 ```bash
+# PostgreSQL connection string (required)
 DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-DIRECT_URL=
+
+# Prisma direct URL (required)
+DIRECT_URL=postgresql://user:password@localhost:5432/dbname
+
+# Supabase credentials (required)
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
 NEXT_PUBLIC_SUPABASE_KEY=<your-supabase-key>
+
+# Base URL of the app (required)
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Admin email for initial seed user (required)
 ADMIN_EMAIL=<admin-email>
 ```
 
@@ -116,7 +124,7 @@ Migrations managed via Prisma.
 
 /buyers → List leads with search, filters, and CSV import/export
 
-/buyers/[id] → View and edit a lead; view change history
+/buyers/[id] → View and edit a lead\
 
 CSV import validates all rows; only valid rows are saved
 
@@ -154,3 +162,31 @@ Ownership Enforcement: Users can only edit/delete leads they own
 ---
 
 ## Screenshots
+
+### Home Screen
+
+![Home Screen](/screenshots/home_screen.png)
+
+### Login Screen
+
+![Login Screen](/screenshots/login_screen.png)
+
+### Buyers List Screen
+
+![Buyers List Screen](/screenshots/buyers_list_screen.png)
+
+### Create New Lead Screen
+
+![Create New Lead](/screenshots/create_new_lead_screen.png)
+
+### CSV Import Modal
+
+![CSV Import Modal](/screenshots/import_csv_modal.png)
+
+### CSV Error Info
+
+![CSV Error Info](/screenshots/csv_error_info_with_row_info.png)
+
+### Change History Record (Old vs New)
+
+![Change History Comparison](/screenshots/change_history_record_with_old_new_comparison.png)
