@@ -2,10 +2,12 @@
 import Navbar from "@/components/Navbar/Navbar";
 import { selectUser } from "@/store/slices/userSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 export default function Home() {
   const user = useSelector(selectUser);
+  const router = useRouter();
 
   if (!user) {
     return (
@@ -20,12 +22,12 @@ export default function Home() {
             Import via CSV, filter and search leads
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/login"
+            <button
+              onClick={() => router.push("/login")}
               className="px-6 py-3 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-500/90 transition"
             >
               Login Now
-            </Link>
+            </button>
           </div>
         </main>
       </div>

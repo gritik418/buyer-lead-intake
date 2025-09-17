@@ -23,30 +23,6 @@ const Wrapper = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  const getUserData = async () => {
-    try {
-      const response = await fetch("/api/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        method: "GET",
-      });
-
-      const result = await response.json();
-
-      if (result?.success) {
-        dispatch(setUser({ user: result?.user }));
-      } else {
-        dispatch(setUser({ user: null }));
-      }
-    } catch (error: unknown) {
-      console.error(error);
-      dispatch(setUser({ user: null }));
-    } finally {
-      setCheckedUser(true);
-    }
-  };
-
   useEffect(() => {
     if (!token) {
       const getUserToken = async () => {
@@ -59,12 +35,43 @@ const Wrapper = ({
       };
       getUserToken();
     }
-  }, [token, dispatch]);
+  }, [token, dispatch, pathname]);
 
   useEffect(() => {
-    if (token && !user?.id) getUserData();
+    if (token) {
+      const getUserData = async () => {
+        try {
+          const response = await fetch("/api/user/me", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            method: "GET",
+          });
+
+          const result = await response.json();
+
+          if (result?.success) {
+            dispatch(setUser({ user: result?.user }));
+          } else {
+            dispatch(setUser({ user: null }));
+          }
+        } catch (error: unknown) {
+          console.error(error);
+          dispatch(setUser({ user: null }));
+        } finally {
+          setCheckedUser(true);
+        }
+      };
+
+      if (!user?.id) {
+        getUserData();
+      } else {
+        setCheckedUser(true);
+      }
+    }
+
     if (user?.id) setCheckedUser(true);
-  }, [token, user]);
+  }, [token, user?.id, dispatch]);
 
   useEffect(() => {
     if (checkedUser && (!user || !user.id)) {
