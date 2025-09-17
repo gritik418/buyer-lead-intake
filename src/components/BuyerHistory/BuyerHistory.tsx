@@ -1,5 +1,10 @@
 import React from "react";
 import { BuyerHistory, User } from "@prisma/client";
+import { JsonValue } from "@prisma/client/runtime/library";
+
+interface DiffData {
+  [key: string]: JsonValue;
+}
 
 interface History extends BuyerHistory {
   user?: User;
@@ -7,9 +12,6 @@ interface History extends BuyerHistory {
     action?: "Created" | "Updated";
     data?: DiffData;
   };
-}
-interface DiffData {
-  [key: string]: any;
 }
 
 const BuyerHistoryComponent = ({ history }: { history: BuyerHistory[] }) => {

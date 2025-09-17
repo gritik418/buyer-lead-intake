@@ -38,8 +38,8 @@ const DeleteBuyerButton = ({ id }: { id: string }) => {
         toast.error(result?.message);
         return;
       }
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setLoading(false);
     }

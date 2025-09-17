@@ -3,6 +3,7 @@ import { checkRateLimit } from "@/lib/rateLimiter";
 import supabase from "@/lib/supabaseClient";
 import { buyerSchema } from "@/validators/buyer";
 import { NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 export async function PATCH(
   req: NextRequest,
@@ -147,10 +148,10 @@ export async function PATCH(
       message: "Record updated.",
       buyer: updatedBuyer,
     });
-  } catch (err: any) {
-    if (err.name === "ZodError") {
+  } catch (err: unknown) {
+    if (err instanceof ZodError) {
       return NextResponse.json(
-        { success: false, errors: err.errors, message: "Validation failed." },
+        { success: false, errors: err.issues, message: "Validation failed." },
         { status: 400 }
       );
     }
@@ -158,8 +159,8 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error: err.message || "Internal server error",
-        message: "Server Error",
+        error: "Internal server error",
+        message: "Internal Server Error",
       },
       { status: 500 }
     );
@@ -220,8 +221,6 @@ export async function DELETE(
 
     const currentBuyer = await prisma.buyer.findUnique({ where: { id } });
 
-    console.log(currentBuyer, user.id);
-
     if (!currentBuyer) {
       return NextResponse.json(
         {
@@ -261,10 +260,10 @@ export async function DELETE(
       },
       { status: 200 }
     );
-  } catch (err: any) {
-    if (err.name === "ZodError") {
+  } catch (err: unknown) {
+    if (err instanceof ZodError) {
       return NextResponse.json(
-        { success: false, errors: err.errors, message: "Validation failed." },
+        { success: false, errors: err.issues, message: "Validation failed." },
         { status: 400 }
       );
     }
@@ -272,7 +271,7 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error: err.message || "Internal server error",
+        error: "Internal server error",
         message: "Server Error",
       },
       { status: 500 }

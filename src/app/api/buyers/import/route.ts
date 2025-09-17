@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const invalidRows: { row: any; errors: string[] }[] = [];
+    const invalidRows: { row: number; errors: string[] }[] = [];
     const validRows: BuyerType[] = [];
 
     let i = 0;
@@ -160,9 +160,9 @@ export async function POST(req: NextRequest) {
       }.`,
       success: true,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { message: "Import failed", error: error },
+      { message: "Import failed", success: false, error },
       { status: 500 }
     );
   }

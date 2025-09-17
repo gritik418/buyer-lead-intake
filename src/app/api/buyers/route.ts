@@ -56,16 +56,16 @@ export async function POST(req: NextRequest) {
       data: {
         ownerId: user.id,
         email: parsedData?.email,
-        fullName: parsedData?.fullName! || "",
-        phone: parsedData?.phone! || "",
-        city: parsedData?.city!,
-        propertyType: parsedData?.propertyType!,
+        fullName: parsedData?.fullName || "",
+        phone: parsedData?.phone || "",
+        city: parsedData?.city,
+        propertyType: parsedData?.propertyType,
         bhk: parsedData?.bhk || null,
-        purpose: parsedData?.purpose!,
+        purpose: parsedData?.purpose,
         budgetMin: parsedData?.budgetMin,
         budgetMax: parsedData?.budgetMax,
-        timeline: parsedData?.timeline!,
-        source: parsedData?.source!,
+        timeline: parsedData?.timeline,
+        source: parsedData?.source,
         notes: parsedData?.notes,
         tags: parsedData?.tags,
       },
@@ -83,9 +83,9 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, buyer, message: "Buyer added." });
-  } catch (err: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, messgae: "Server Error.", error: err.message },
+      { success: false, message: "Server Error.", error },
       { status: 400 }
     );
   }

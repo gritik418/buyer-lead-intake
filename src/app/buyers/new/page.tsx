@@ -24,8 +24,8 @@ export default function CreateBuyerPage() {
     watch,
     setError,
     formState: { errors },
-  } = useForm<BuyerType>({
-    resolver: zodResolver(buyerSchema) as any,
+  } = useForm({
+    resolver: zodResolver(buyerSchema),
     defaultValues: {
       budgetMin: 5000,
       budgetMax: 10000,
@@ -54,11 +54,16 @@ export default function CreateBuyerPage() {
 
       if (!res.ok) {
         if (json?.errors) {
-          Object.entries(json.errors).forEach(([field, errorObj]: any) => {
-            if (errorObj?._errors?.length) {
+          Object.entries(json.errors).forEach(([field, errorObj]) => {
+            if (
+              errorObj &&
+              typeof errorObj === "object" &&
+              "_errors" in errorObj &&
+              Array.isArray((errorObj as { _errors: string[] })._errors)
+            ) {
               setError(field as keyof BuyerType, {
                 type: "manual",
-                message: errorObj._errors[0],
+                message: (errorObj as { _errors: string[] })._errors[0],
               });
             }
           });
@@ -68,8 +73,8 @@ export default function CreateBuyerPage() {
       } else {
         router.push("/buyers");
       }
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setLoading(false);
     }

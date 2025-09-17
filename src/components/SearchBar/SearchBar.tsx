@@ -16,7 +16,7 @@ const SearchBar = () => {
     else params.delete("search");
 
     router.replace(`/buyers?${params.toString()}`);
-  }, [debouncedQuery]);
+  }, [debouncedQuery, router, searchParams]);
 
   return (
     <div className="flex">

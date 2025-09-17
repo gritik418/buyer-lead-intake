@@ -74,9 +74,11 @@ const ImportCSV = () => {
           return;
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       setLoading(false);
-      setErrorMessage("Failed to upload CSV");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Failed to upload CSV"
+      );
     } finally {
       setLoading(false);
     }
@@ -143,7 +145,7 @@ const ImportCSV = () => {
                 Validation Errors:
               </p>
               <ul className="space-y-1 list-disc list-inside">
-                {errors.map((err: any, index: number) => (
+                {errors.map((err: ErrorsType, index: number) => (
                   <li key={index} className="text-red-300">
                     <span className="font-medium">Row {err.row}:</span>{" "}
                     {err.errors.join(", ")}
@@ -159,7 +161,12 @@ const ImportCSV = () => {
             </Dialog.Close>
             <button
               onClick={handleUpload}
-              className="px-3 h-10 flex items-center justify-center w-20 cursor-pointer rounded-md bg-indigo-500 hover:bg-indigo-600"
+              disabled={!file || loading}
+              className={`px-3 h-10 flex items-center justify-center w-20 cursor-pointer rounded-md ${
+                !file || loading
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-indigo-500 hover:bg-indigo-600"
+              }`}
             >
               {loading ? (
                 <svg

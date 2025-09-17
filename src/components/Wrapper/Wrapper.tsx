@@ -39,25 +39,27 @@ const Wrapper = ({
       } else {
         dispatch(setUser({ user: null }));
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error(error);
       dispatch(setUser({ user: null }));
     } finally {
       setCheckedUser(true);
     }
   };
 
-  const getUserToken = async () => {
-    const { data } = await supabase.auth.getSession();
-    if (data.session) {
-      dispatch(setToken({ token: data.session.access_token }));
-    } else {
-      setCheckedUser(true);
-    }
-  };
-
   useEffect(() => {
-    if (!token) getUserToken();
-  }, [pathname]);
+    if (!token) {
+      const getUserToken = async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          dispatch(setToken({ token: data.session.access_token }));
+        } else {
+          setCheckedUser(true);
+        }
+      };
+      getUserToken();
+    }
+  }, [token, dispatch]);
 
   useEffect(() => {
     if (token && !user?.id) getUserData();
@@ -72,7 +74,7 @@ const Wrapper = ({
         redirect("/login");
       }
     }
-  }, [checkedUser, user, router]);
+  }, [checkedUser, user, router, pathname]);
 
   if (!checkedUser) {
     return (

@@ -2,6 +2,7 @@ import supabase from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import statusValidator from "@/validators/statusValidator";
+import { ZodError } from "zod";
 
 export async function PATCH(
   req: NextRequest,
@@ -10,8 +11,6 @@ export async function PATCH(
   try {
     const { id } = await params;
     const { status } = await req.json();
-
-    console.log(status);
 
     const bearerToken = req.headers.get("Authorization");
 
@@ -39,7 +38,11 @@ export async function PATCH(
       );
     }
 
-    const { success, data, error } = statusValidator.safeParse(status);
+    const {
+      success,
+      data: validatedStatus,
+      error,
+    } = statusValidator.safeParse(status);
 
     const { data: sessionData } = await supabase.auth.getUser(authToken);
     const user = sessionData.user;
@@ -102,7 +105,7 @@ export async function PATCH(
     const updatedBuyer = await prisma.buyer.update({
       where: { id },
       data: {
-        status,
+        status: validatedStatus,
       },
     });
 
@@ -125,10 +128,10 @@ export async function PATCH(
       },
       { status: 200 }
     );
-  } catch (err: any) {
-    if (err.name === "ZodError") {
+  } catch (err: unknown) {
+    if (err instanceof ZodError) {
       return NextResponse.json(
-        { success: false, errors: err.errors, message: "Validation failed." },
+        { success: false, errors: err.issues, message: "Validation failed." },
         { status: 400 }
       );
     }
@@ -136,7 +139,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error: err.message || "Internal server error",
+        error: "Internal server error",
         message: "Server Error",
       },
       { status: 500 }

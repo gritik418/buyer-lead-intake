@@ -53,11 +53,16 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
         toast.success(result?.message);
       } else {
         if (result?.errors) {
-          Object.entries(result.errors).forEach(([field, errorObj]: any) => {
-            if (errorObj?._errors?.length) {
+          Object.entries(result.errors).forEach(([field, errorObj]) => {
+            if (
+              errorObj &&
+              typeof errorObj === "object" &&
+              "_errors" in errorObj &&
+              Array.isArray((errorObj as { _errors: string[] })._errors)
+            ) {
               setError(field as keyof BuyerType, {
                 type: "manual",
-                message: errorObj._errors[0],
+                message: (errorObj as { _errors: string[] })._errors[0],
               });
             }
           });
@@ -66,8 +71,8 @@ const UpdateBuyerForm = ({ buyer }: Props) => {
           toast.error(result?.message || "Something went wrong.");
         }
       }
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : "Unexpected Error");
     }
   };
 

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { stringify } from "csv-stringify/sync";
+import { City, Prisma, PropertyType, Status, Timeline } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
 
-    const where: any = {};
+    const where: Prisma.BuyerWhereInput = {};
 
     const search = searchParams.get("search");
     const city = searchParams.get("city");
@@ -22,12 +23,12 @@ export async function GET(request: NextRequest) {
         { phone: { contains: search, mode: "insensitive" } },
       ];
     }
-    if (city) where.city = city;
-    if (propertyType) where.propertyType = propertyType;
-    if (status) where.status = status;
-    if (timeline) where.timeline = timeline;
+    if (city) where.city = city as City;
+    if (propertyType) where.propertyType = propertyType as PropertyType;
+    if (status) where.status = status as Status;
+    if (timeline) where.timeline = timeline as Timeline;
 
-    let orderBy: any = { updatedAt: "desc" };
+    let orderBy: Prisma.BuyerOrderByWithRelationInput = { updatedAt: "desc" };
     const [field, dir] = sort.split(":");
     if (field && dir) orderBy = { [field]: dir };
 

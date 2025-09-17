@@ -11,11 +11,11 @@ export default class ErrorBoundary extends React.Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): State {
     return { hasError: true };
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Error Boundary Caught:", error, errorInfo);
   }
 
@@ -25,6 +25,13 @@ export default class ErrorBoundary extends React.Component<Props, State> {
         <div className="p-4 text-center">
           <h2 className="text-xl font-semibold">Something went wrong.</h2>
           <p className="text-sm text-gray-500">Please try again later.</p>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-3 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+          >
+            Reload Page
+          </button>
         </div>
       );
     }

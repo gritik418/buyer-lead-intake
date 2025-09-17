@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prismaClient";
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
 
-    const userData = await prisma?.user.findUnique({ where: { id: user.id } });
+    const userData = await prisma.user.findUnique({ where: { id: user.id } });
 
     if (!userData || !userData?.id) {
       return NextResponse.json(
@@ -59,9 +60,9 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { success: false, message: "Server Error." },
+      { success: false, message: "Server Error.", error },
       { status: 500 }
     );
   }

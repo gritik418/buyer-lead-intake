@@ -4,7 +4,14 @@ import Pagination from "@/components/Pagination/Pagination";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import StatusDropdown from "@/components/StatusDropdown/StatusDropdown";
 import prisma from "@/lib/prismaClient";
-import { Buyer, City, PropertyType, Status, Timeline } from "@prisma/client";
+import {
+  Buyer,
+  City,
+  Prisma,
+  PropertyType,
+  Status,
+  Timeline,
+} from "@prisma/client";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 
@@ -26,7 +33,7 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
 
-  const where: any = {};
+  const where: Prisma.BuyerWhereInput = {};
 
   if (searchParams.search) {
     where.OR = [
@@ -41,7 +48,7 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
   if (searchParams.status) where.status = searchParams.status;
   if (searchParams.timeline) where.timeline = searchParams.timeline;
 
-  let orderBy: any = { updatedAt: "desc" };
+  let orderBy: Prisma.BuyerOrderByWithRelationInput = { updatedAt: "desc" };
 
   if (searchParams?.sort) {
     const keyValue = searchParams.sort.split(":");
@@ -78,7 +85,7 @@ export default async function BuyersPage(props: { searchParams: QueryParams }) {
               {buyers.length > 0 ? (
                 <Link
                   href={`/api/buyers/export?${new URLSearchParams(
-                    searchParams as any
+                    searchParams
                   ).toString()}`}
                   className="flex gap-2 bg-green-500 py-1 px-2 rounded-md items-center text-white"
                 >

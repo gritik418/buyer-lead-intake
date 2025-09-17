@@ -44,8 +44,8 @@ const StatusDropdown = ({ defaultSelected, ownerId, buyerId }: PropsType) => {
       } else {
         toast.error(result?.message || "Something went wrong.");
       }
-    } catch (err) {
-      toast.error("Something went wrong.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Something went wrong.");
       setCurrentStatus(defaultSelected);
     } finally {
       setIsLoading(false);
